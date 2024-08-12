@@ -3,13 +3,16 @@ Console.Write("Files path: ");
 var path = Console.ReadLine();
 
 Console.Write("Year: ");
-var year = int.Parse(Console.ReadLine());
+if (!int.TryParse(Console.ReadLine(), out int year))
+    year = 2021;
 Console.Write("Month: ");
-var moth = int.Parse(Console.ReadLine());
-Console.Write("Day: ");
-var day = int.Parse(Console.ReadLine());
+if (!int.TryParse(Console.ReadLine(), out int month))
+    month = 5;
+    Console.Write("Day: ");
+if (!int.TryParse(Console.ReadLine(), out int day))
+    day = 16;
 
-var d = new DateTime(year, moth, day);
+var d = new DateTime(year, month, day);
 
 var dirInfo = new DirectoryInfo(path);
 
@@ -25,13 +28,16 @@ if (dirInfo.Exists)
         file.LastWriteTime = d;
         file.LastAccessTime = d;
         var newFileName = Path.Combine(path, GetFileName(fileNum) + file.Extension);
-        File.Move(file.FullName, newFileName);
+        if (!files.Any(f => f.FullName == newFileName))
+            File.Move(file.FullName, newFileName);
     }
 }
 else
 {
     Console.WriteLine($"Directory is not exists: {path}");
 }
+
+Console.ReadKey();
 
 string GetFileName(int fileNum)
 {
