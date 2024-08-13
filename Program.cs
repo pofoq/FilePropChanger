@@ -20,6 +20,17 @@ if (dirInfo.Exists)
 {
     var files = dirInfo.GetFiles();
     var fileNum = 0;
+
+    foreach (var file in files.OrderBy(f => f.CreationTime))
+    {
+        fileNum++;
+        var newFileName = Path.Combine(path, GetFileName(fileNum) + file.Extension);
+        if (!files.Any(f => f.FullName == newFileName))
+            File.Move(file.FullName, newFileName);
+    }
+
+    files = dirInfo.GetFiles();
+
     foreach (var file in files.OrderBy(f => f.CreationTime))
     {
         fileNum++;
@@ -27,9 +38,6 @@ if (dirInfo.Exists)
         file.CreationTime = d;
         file.LastWriteTime = d;
         file.LastAccessTime = d;
-        var newFileName = Path.Combine(path, GetFileName(fileNum) + file.Extension);
-        if (!files.Any(f => f.FullName == newFileName))
-            File.Move(file.FullName, newFileName);
     }
 }
 else
@@ -37,9 +45,11 @@ else
     Console.WriteLine($"Directory is not exists: {path}");
 }
 
+Console.WriteLine("Well done!");
+
 Console.ReadKey();
 
-string GetFileName(int fileNum)
+static string GetFileName(int fileNum)
 {
     var fileNumStr = string.Empty;
 
