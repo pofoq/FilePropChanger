@@ -24,9 +24,7 @@ if (dirInfo.Exists)
     foreach (var file in files.OrderBy(f => f.CreationTime))
     {
         fileNum++;
-        var newFileName = Path.Combine(path, GetFileName(fileNum) + file.Extension);
-        if (!files.Any(f => f.FullName == newFileName))
-            File.Move(file.FullName, newFileName);
+        //Rename(file, GetFileName(fileNum));
     }
 
     files = dirInfo.GetFiles();
@@ -48,6 +46,19 @@ else
 Console.WriteLine("Well done!");
 
 Console.ReadKey();
+
+static void Rename(FileInfo fileInfo, string newFileName)
+{
+    newFileName = Path.Combine(fileInfo.DirectoryName, newFileName + fileInfo.Extension);
+    try
+    {
+        File.Move(fileInfo.FullName, newFileName);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
+}
 
 static string GetFileName(int fileNum)
 {
